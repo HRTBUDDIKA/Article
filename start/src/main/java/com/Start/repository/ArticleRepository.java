@@ -8,5 +8,9 @@ import java.util.List;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    List<Article> findByAuthor(String author);
+    // Custom method to find articles by author, sorted by creation date
+    List<Article> findByAuthorOrderByCreatedAtDesc(String author);
+
+    // Search method for finding articles by title or content
+    List<Article> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String title, String content);
 }

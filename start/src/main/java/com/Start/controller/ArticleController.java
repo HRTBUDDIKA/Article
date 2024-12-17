@@ -26,20 +26,22 @@ public class ArticleController {
         return service.getArticleById(id);
     }
 
+    @GetMapping("/by-author/{username}")
+    public List<Article> getArticlesByAuthor(@PathVariable String username) {
+        return service.getArticlesByAuthor(username);
+    }
+
     @PostMapping("/write")
     public Article createArticle(@RequestBody Article article) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername(); // Replace with the appropriate method
+            String username = userDetails.getUsername();
 
             article.setAuthor(username);
-        } else {
-            // Handle the case where authentication is null or principal is not an instance of CustomUserDetails
         }
         return service.createArticle(article);
     }
-
 
     @PutMapping("/{id}")
     public Article updateArticle(@PathVariable Long id, @RequestBody Article articleDetails) {
@@ -49,5 +51,11 @@ public class ArticleController {
     @DeleteMapping("/{id}")
     public void deleteArticle(@PathVariable Long id) {
         service.deleteArticle(id);
+    }
+
+    // Optional: Search endpoint
+    @GetMapping("/search")
+    public List<Article> searchArticles(@RequestParam String query) {
+        return service.searchArticles(query);
     }
 }
